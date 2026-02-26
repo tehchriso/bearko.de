@@ -7,13 +7,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Offside&family=Workbench&display=swap" rel="stylesheet">
     <style>
         html, body { margin:0; padding:0; height:100%; overflow:hidden; background:#050505; font-family:'Offside', sans-serif; }
-        canvas { display:block; }
-        .note { position:absolute; top:20px; left:20px; color:#e8e8e8; font-family:Offside, sans-serif; }
+        canvas { display:block; position:absolute; top:0; left:0; z-index:1; }
+        .container { position:relative; z-index:2; text-align:center; color:#e8e8e8; top:50%; transform:translateY(-50%); width:100%; }
+        h1 { font-family:'Workbench', serif; font-size:3rem; margin-bottom:1rem; }
+        .note { font-size:1.2rem; }
     </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<div class="note">Canvas fractal brownian motion nebula (deep obsidian + indigo/magenta/teal)</div>
+<div class="container">
+    <h1>fBm nebula</h1>
+    <p class="note">Canvas fractal brownian motion nebula (deep obsidian + indigo/magenta/teal)</p>
+</div>
 <script>
 // Simplex noise implementation (adapted from https://github.com/jwagner/simplex-noise.js)
 class SimplexNoise {
@@ -49,10 +54,10 @@ function resize(){w=canvas.width=window.innerWidth; h=canvas.height=window.inner
 window.addEventListener('resize',resize); resize();
 
 const layers=[
-    {scale:0.003, speedX:0.01, speedY:0.008, color:[48,0,96,0.1]},
-    {scale:0.005, speedX:-0.008, speedY:0.01, color:[255,0,255,0.08]},
-    {scale:0.002, speedX:0.006, speedY:-0.005, color:[0,255,255,0.06]},
-    {scale:0.004, speedX:-0.005, speedY:-0.007, color:[96,0,144,0.09]}
+    {scale:0.003, speedX:0.01, speedY:0.008, color:[48,0,96,0.25]},
+    {scale:0.005, speedX:-0.008, speedY:0.01, color:[255,0,255,0.22]},
+    {scale:0.002, speedX:0.006, speedY:-0.005, color:[0,255,255,0.18]},
+    {scale:0.004, speedX:-0.005, speedY:-0.007, color:[96,0,144,0.24]}
 ];
 let time=0;
 
