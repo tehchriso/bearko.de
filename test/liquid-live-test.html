@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metaball Liquid Live</title>
+    <link href="https://fonts.googleapis.com/css2?family=Offside&family=Workbench&display=swap" rel="stylesheet">
+    <style>
+        html, body { margin:0; padding:0; height:100%; overflow:hidden; background:#050505; font-family:'Offside', sans-serif; }
+        #canvas-container { position:absolute; top:0; left:0; z-index:1; width:100%; height:100%; filter: blur(20px) contrast(1.5); }
+        canvas { display:block; width:100%; height:100%; }
+        .container { position:relative; z-index:2; text-align:center; color:#e8e8e8; top:50%; transform:translateY(-50%); width:100%; }
+        h1 { font-family:'Workbench', serif; font-size:3rem; margin-bottom:1rem; }
+        .note { font-size:1.2rem; margin-bottom:2rem; }
+        .slider-group { display:inline-block; text-align:left; margin:0 10px; }
+        .slider-group label { display:block; font-size:0.9rem; margin-bottom:4px; }
+        .slider-group input[type=range] { width:150px; }
+    </style>
+</head>
+<body>
+<div id="canvas-container">
+    <canvas id="c"></canvas>
+</div>
+<div class="container">
+    <h1>Metaball liquid</h1>
+    <p class="note">Adjust opacity and see liquid blobs merge and flow.</p>
+    <div id="controls">
+        <!-- sliders inserted by script -->
+    </div>
+</div>
+<script>
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d');
+let w,h;
+
+function resize(){
+    w=canvas.width=window.innerWidth; 
+    h=canvas.height=window.innerHeight;
+}
+window.addEventListener('resize',resize); 
+resize();
+
+// metaball configuration: position, radius, speed, opacity
+const metaballs=[
+    {x:0.2, y:0.3, vx:0.01, vy:0.005, r:100, opacity:0.35},
+    {x:0.7, y:0.6, vx:-0.008, vy:0.01, r:120, opacity:0.3},
+    {x:0.5, y:0.2, vx:0.006, vy:-0.007, r:90, opacity:0.25},
+    {x:0.3, y:0.8, vx:-0.005, vy:-0.006, r:110, opacity:0.32}
+];
+
+// create sliders
+const controls=document.getElementById('controls');
+metaballs.forEach((mb,i)=>{
+    const group=document.createElement('div');
+    group.className='slider-group';
+    const label=document.createElement('label');
+    label.textContent=`Blob ${i+1} opacity`;
+    const slider=document.createElement('input');
+    slider.type='range';
+    slider.min=0; slider.max=1; slider.step=0.01;
+    slider.value=mb.opacity;
+    slider.addEventListener('input',e=>{mb.opacity=parseFloat(e.target.value);});
+    group.appendChild(label);
+    group.appendChild(slider);
+    controls.appendChild(group);
+});
+
+function hsl(h,s,l){
+    return `hsl(${h},${s}%,${l}%)`;
+}
+
+function draw(){
+    ctx.fillStyle='#050505';
+    ctx.fillRect(0,0,w,h);
+    
+    metaballs.forEach((mb,i)=>{
+        // update position (wrap around)
+        mb.x += mb.vx;
+        mb.y += mb.vy;
+        if(mb.x<0) mb.x+=1;
+        if(mb.x>1) mb.x-=1;
+        if(mb.y<0) mb.y+=1;
+        if(mb.y>1) mb.y-=1;
+        
+        // iridescent color based on position
+        let hue=(mb.x*360 + mb.y*180 + i*90) % 360;
+        let color=hsl(hue, 80, 50);
+        
+        // radial gradient for soft blob
+        let gx=mb.x*w;
+        let gy=mb.y*h;
+        let grad=ctx.createRadialGradient(gx,gy,0,gx,gy,mb.r);
+        grad.addColorStop(0, color);
+        grad.addColorStop(0.5, color.replace('hsl','hsla').replace(')',', 0.5)'));
+        grad.addColorStop(1, color.replace('hsl','hsla').replace(')',', 0)'));
+        
+        ctx.fillStyle=grad;
+        ctx.globalAlpha=mb.opacity;
+        ctx.fillRect(gx-mb.r, gy-mb.r, mb.r*2, mb.r*2);
+    });
+    
+    ctx.globalAlpha=1;
+    requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+</body>
+</html>
