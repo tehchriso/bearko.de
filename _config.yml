@@ -1,0 +1,16 @@
+title: bearko.de
+description: Future home of bearko.de
+baseurl: ""
+url: "https://bearko.de"
+
+# GitHub Pages settings
+github: [metadata]
+
+# Jekyll settings
+markdown: kramdown
+theme: jekyll-theme-minimal
+
+# Exclude files from Jekyll
+exclude:
+  - .gitignore
+  - README.md
