@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nebula Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Offside&family=Workbench&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Offside', sans-serif;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(45, 90, 61, 0.45) 0%, transparent 80%),
+                radial-gradient(circle at 80% 80%, rgba(75, 59, 82, 0.4) 0%, transparent 80%),
+                radial-gradient(circle at 40% 20%, rgba(107, 68, 35, 0.35) 0%, transparent 80%),
+                radial-gradient(circle at 60% 60%, rgba(45, 90, 61, 0.25) 0%, transparent 75%),
+                linear-gradient(135deg, #0a0a0a 0%, #141110 50%, #0a0f10 100%);
+            background-size: 400% 400%, 420% 420%, 380% 380%, 450% 450%, 100% 100%;
+            background-attachment: fixed;
+            animation: drift1 35s ease-in-out infinite, drift2 40s ease-in-out infinite reverse, drift3 45s ease-in-out infinite;
+            color: #e8e8e8;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            filter: blur(0.5px);
+        }
+
+        @keyframes drift1 {
+            0%, 100% {
+                background-position: 0% 0%, 100% 100%, 50% 50%, 0% 50%, 0% 0%;
+            }
+            50% {
+                background-position: 100% 50%, 0% 0%, 100% 20%, 100% 0%, 0% 0%;
+            }
+        }
+
+        @keyframes drift2 {
+            0%, 100% {
+                background-position: 100% 100%, 50% 50%, 0% 0%, 100% 100%, 0% 0%;
+            }
+            50% {
+                background-position: 30% 80%, 100% 100%, 50% 100%, 0% 50%, 0% 0%;
+            }
+        }
+
+        @keyframes drift3 {
+            0%, 100% {
+                background-position: 50% 0%, 0% 50%, 100% 100%, 50% 0%, 0% 0%;
+            }
+            50% {
+                background-position: 80% 100%, 100% 0%, 30% 30%, 100% 100%, 0% 0%;
+            }
+        }
+
+        h1 {
+            font-family: 'Workbench', serif;
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .note {
+            font-size: 1.2rem;
+            text-align: center;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Nebula test</h1>
+        <p class="note">Larger gradients, softer fades, independent drift paths for each glow layer. More organic/astral.</p>
+    </div>
+</body>
+</html>
