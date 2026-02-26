@@ -58,14 +58,15 @@ let w,h;
 function resize(){w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight;}
 window.addEventListener('resize',resize); resize();
 
+// layer configuration object array (opacity separate field)
 const layers=[
-    {scale:0.003, speedX:0.01, speedY:0.008, color:[48,0,96,0.25]},
-    {scale:0.005, speedX:-0.008, speedY:0.01, color:[255,0,255,0.22]},
-    {scale:0.002, speedX:0.006, speedY:-0.005, color:[0,255,255,0.18]},
-    {scale:0.004, speedX:-0.005, speedY:-0.007, color:[96,0,144,0.24]}
+    {scale:0.003, speedX:0.01, speedY:0.008, color:[48,0,96], opacity:0.25},
+    {scale:0.005, speedX:-0.008, speedY:0.01, color:[255,0,255], opacity:0.22},
+    {scale:0.002, speedX:0.006, speedY:-0.005, color:[0,255,255], opacity:0.18},
+    {scale:0.004, speedX:-0.005, speedY:-0.007, color:[96,0,144], opacity:0.24}
 ];
 
-// create sliders
+// set up controls
 const controls=document.getElementById('controls');
 layers.forEach((l,i)=>{
     const group=document.createElement('div');
@@ -75,38 +76,65 @@ layers.forEach((l,i)=>{
     const slider=document.createElement('input');
     slider.type='range';
     slider.min=0; slider.max=1; slider.step=0.01;
-    slider.value=l.color[3];
-    slider.addEventListener('input',e=>{l.color[3]=parseFloat(e.target.value);});
+    slider.value=l.opacity;
+    slider.addEventListener('input',e=>{l.opacity=parseFloat(e.target.value);});
     group.appendChild(label);
     group.appendChild(slider);
     controls.appendChild(group);
 });
 
-let time=0;
-function draw(){
-    ctx.globalCompositeOperation='source-over';
-    ctx.fillStyle='#050505'; ctx.fillRect(0,0,w,h);
+// create offscreen canvases for each layer and populate once
+let layerCanvases=[];
+function rebuildLayers(){
+    layerCanvases=[];
     layers.forEach(l=>{
-        ctx.globalCompositeOperation='screen';
-        let img=ctx.createImageData(w,h);
-        let data=img.data;
+        const off=document.createElement('canvas');
+        off.width=w; off.height=h;
+        const offCtx=off.getContext('2d');
+        const img=offCtx.createImageData(w,h);
+        const data=img.data;
         for(let y=0;y<h;y++){
             for(let x=0;x<w;x++){
-                let nx=x*l.scale+time*l.speedX;
-                let ny=y*l.scale+time*l.speedY;
+                let nx=x*l.scale;
+                let ny=y*l.scale;
                 let n=noise.noise2D(nx, ny) * 0.5 + 0.5;
                 let idx=(y*w+x)*4;
                 data[idx]=l.color[0];
                 data[idx+1]=l.color[1];
                 data[idx+2]=l.color[2];
-                data[idx+3]=Math.floor(n * 255 * l.color[3]);
+                data[idx+3]=Math.floor(n * 255);
             }
         }
-        ctx.putImageData(img,0,0);
+        offCtx.putImageData(img,0,0);
+        layerCanvases.push(off);
     });
-    time+=0.5;
+}
+
+let offsets=layers.map(()=>({x:0,y:0}));
+// animate by drawing precomputed layers with globalAlpha
+function draw(){
+    ctx.globalCompositeOperation='source-over';
+    ctx.fillStyle='#050505'; ctx.fillRect(0,0,w,h);
+    layers.forEach((l,i)=>{
+        ctx.globalCompositeOperation='screen';
+        ctx.globalAlpha=l.opacity;
+        offsets[i].x = (offsets[i].x + l.speedX) % w;
+        offsets[i].y = (offsets[i].y + l.speedY) % h;
+        const lc=layerCanvases[i];
+        // tile to cover wrap
+        ctx.drawImage(lc, offsets[i].x, offsets[i].y);
+        if(offsets[i].x>0) ctx.drawImage(lc, offsets[i].x - w, offsets[i].y);
+        if(offsets[i].y>0) ctx.drawImage(lc, offsets[i].x, offsets[i].y - h);
+        if(offsets[i].x>0 && offsets[i].y>0) ctx.drawImage(lc, offsets[i].x - w, offsets[i].y - h);
+    });
+    ctx.globalAlpha=1;
     requestAnimationFrame(draw);
 }
+
+// rebuild when size changes
+function resize(){w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; rebuildLayers();}
+window.addEventListener('resize',resize); resize();
+
 draw();
 </script>
 </body>
