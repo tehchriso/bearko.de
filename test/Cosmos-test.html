@@ -19,15 +19,15 @@
                 creates a more organic, cloud-like feel than simple circles.
                 The opacities are kept low to ensure the effect is subtle.
             */
-            background: 
-                /* Layer 1: A large, soft green ellipse */
-                radial-gradient(ellipse 60% 80% at 20% 30%, hsla(145, 38%, 25%, 0.35), transparent 70%),
-                /* Layer 2: A deep brown circle for contrast */
-                radial-gradient(circle 500px at 80% 90%, hsla(28, 44%, 25%, 0.3), transparent 70%),
-                /* Layer 3: A muted purple ellipse */
-                radial-gradient(ellipse 80% 60% at 50% 60%, hsla(280, 15%, 28%, 0.35), transparent 75%),
-                /* Layer 4: Another green touch for depth */
-                radial-gradient(circle 400px at 10% 80%, hsla(145, 38%, 25%, 0.25), transparent 65%),
+            background:
+                /* Layer 1: A long, wispy green tendril. Opacity slightly increased. */
+                radial-gradient(ellipse 90% 40% at 20% 30%, hsla(145, 38%, 25%, 0.4), transparent 60%),
+                /* Layer 2: A stretched brown tendril for contrast. */
+                radial-gradient(ellipse 40% 80% at 80% 90%, hsla(28, 44%, 25%, 0.35), transparent 60%),
+                /* Layer 3: A wide, soft purple cloud. */
+                radial-gradient(ellipse 80% 50% at 50% 60%, hsla(280, 15%, 28%, 0.4), transparent 65%),
+                /* Layer 4: Another wispy green tendril for depth. */
+                radial-gradient(ellipse 50% 90% at 10% 80%, hsla(145, 38%, 25%, 0.3), transparent 60%),
                 /* Base Layer: A very dark, near-black linear gradient */
                 linear-gradient(135deg, #0a0a0a 0%, #141110 50%, #0a0f10 100%);
 
@@ -35,18 +35,17 @@
                 Each gradient layer is given a large background-size to allow for smooth movement 
                 across the viewport without hard edges appearing.
             */
-            background-size: 350% 350%, 400% 400%, 380% 380%, 420% 420%, 100% 100%;
+            background-size: 300% 300%, 350% 350%, 320% 320%, 380% 380%, 100% 100%;
             background-attachment: fixed;
 
             /* 
-                Multiple animations are applied, each targeting the background layers.
-                They have different durations, timing functions, and directions (reverse)
-                to create a complex, non-repeating, and organic drift.
+                Animations have shorter durations for more visible activity.
+                The keyframes now create more complex, swirling paths.
             */
             animation: 
-                drift1 45s ease-in-out infinite, 
-                drift2 55s ease-in-out infinite reverse,
-                drift3 50s ease-in-out infinite;
+                swirl1 25s ease-in-out infinite, 
+                swirl2 30s ease-in-out infinite reverse,
+                swirl3 28s ease-in-out infinite;
 
             color: #e8e8e8;
             min-height: 100vh;
@@ -59,30 +58,31 @@
         }
 
         /* 
-            Each keyframe animation defines a unique, meandering path for the background layers.
-            Using multiple steps (0, 25, 50, 75, 100) creates more complex movement than a simple A-to-B animation.
+            The keyframes are redesigned to create circular and counter-rotating paths.
+            This makes the layers appear to swirl and twist around each other, creating
+            a more complex and ethereal "tendril" effect.
         */
-        @keyframes drift1 {
-            0%   { background-position: 0% 50%, 100% 100%, 50% 0%, 0% 100%, 0% 0%; }
-            25%  { background-position: 50% 0%, 80% 20%, 100% 50%, 50% 50%, 0% 0%; }
-            50%  { background-position: 100% 50%, 0% 0%, 50% 100%, 80% 0%, 0% 0%; }
-            75%  { background-position: 50% 100%, 20% 80%, 0% 50%, 30% 20%, 0% 0%; }
-            100% { background-position: 0% 50%, 100% 100%, 50% 0%, 0% 100%, 0% 0%; }
+        @keyframes swirl1 {
+            0%   { background-position: 0% 50%, 100% 50%, 50% 0%, 0% 100%, 0% 0%; }
+            25%  { background-position: 50% 0%, 50% 100%, 100% 50%, 50% 50%, 0% 0%; }
+            50%  { background-position: 100% 50%, 0% 50%, 50% 100%, 80% 0%, 0% 0%; }
+            75%  { background-position: 50% 100%, 50% 0%, 0% 50%, 30% 20%, 0% 0%; }
+            100% { background-position: 0% 50%, 100% 50%, 50% 0%, 0% 100%, 0% 0%; }
         }
 
-        @keyframes drift2 {
-            0%   { background-position: 100% 0%, 0% 100%, 0% 0%, 100% 50%, 0% 0%; }
+        @keyframes swirl2 {
+            0%   { background-position: 100% 0%, 0% 100%, 0% 50%, 100% 50%, 0% 0%; }
             25%  { background-position: 50% 50%, 30% 0%, 80% 100%, 50% 100%, 0% 0%; }
-            50%  { background-position: 0% 100%, 100% 50%, 30% 0%, 0% 50%, 0% 0%; }
-            75%  { background-position: 20% 50%, 50% 0%, 100% 20%, 30% 0%, 0% 0%; }
-            100% { background-position: 100% 0%, 0% 100%, 0% 0%, 100% 50%, 0% 0%; }
+            50%  { background-position: 0% 0%, 100% 50%, 30% 0%, 0% 50%, 0% 0%; }
+            75%  { background-position: 20% 50%, 50% 100%, 100% 20%, 30% 0%, 0% 0%; }
+            100% { background-position: 100% 0%, 0% 100%, 0% 50%, 100% 50%, 0% 0%; }
         }
 
-        @keyframes drift3 {
+        @keyframes swirl3 {
             0%   { background-position: 50% 100%, 50% 0%, 100% 50%, 50% 100%, 0% 0%; }
-            25%  { background-position: 0% 50%, 100% 100%, 50% 0%, 80% 50%, 0% 0%; }
-            50%  { background-position: 100% 0%, 0% 50%, 0% 100%, 100% 0%, 0% 0%; }
-            75%  { background-position: 50% 0%, 20% 20%, 50% 50%, 0% 0%, 0% 0%; }
+            25%  { background-position: 0% 50%, 100% 0%, 50% 100%, 80% 50%, 0% 0%; }
+            50%  { background-position: 100% 100%, 0% 50%, 0% 0%, 100% 0%, 0% 0%; }
+            75%  { background-position: 50% 0%, 20% 100%, 50% 50%, 0% 100%, 0% 0%; }
             100% { background-position: 50% 100%, 50% 0%, 100% 50%, 50% 100%, 0% 0%; }
         }
 
